@@ -30,15 +30,15 @@
 
 			<TextView
 				android:id="@+id/item_id"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:text="TextView"
 				android:visibility="gone" />
 
 			<com.sajed.sajednt.SquareImageView
 				android:id="@+id/item_logo"
-				android:layout_width="200px"
-				android:layout_height="200px"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
 				android:visibility="visible" />
 
 			<RelativeLayout
