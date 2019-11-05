@@ -1,7 +1,10 @@
 package com.sajed.sajednt;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -11,6 +14,8 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,28 +54,63 @@ public class MainActivity extends AppCompatActivity {
         rv = new adapterItem( result , getApplicationContext() , MainActivity.this );
         mRecyclerItem.swapAdapter(rv, false);
 
-        new getUserItems().execute();
+        if(isNetworkConnected()) {
 
-        mRecyclerItem.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+            new getUserItems().execute();
+
+            mRecyclerItem.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
 
 
-                if (!recyclerView.canScrollVertically(1)) {
+                    if (!recyclerView.canScrollVertically(1)) {
 
-                    if(refresh) {
-                        Toast.makeText(MainActivity.this, "Loading New Items ...", Toast.LENGTH_SHORT).show();
-                        refresh = false;
-                        new getUserItems().execute();
+                        if (refresh) {
+                            Toast.makeText(MainActivity.this, "Loading New Items ...", Toast.LENGTH_SHORT).show();
+                            refresh = false;
+                            new getUserItems().execute();
 
+                        }
                     }
                 }
-            }
-        });
-
+            });
+        }
+        else{
+            Toast.makeText(this, "Network Not Found", Toast.LENGTH_SHORT).show();
+        }
     }
 
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.mainmenu, menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_add) {
+
+            Intent o = new Intent(MainActivity.this , addUser.class);
+            startActivity(o);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public class getUserItems extends AsyncTask<String, String , String>{
 

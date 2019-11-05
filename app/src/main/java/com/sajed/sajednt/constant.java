@@ -19,5 +19,6 @@ public class constant {
     public static String domain = "https://reqres.in/";
     public static String get_list_user = "api/users?page=";
     public static String delete_user = "api/users/";
+    public static String add_user = "api/users";
 
 }
